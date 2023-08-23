@@ -15,6 +15,10 @@ import java.util.*;
  */
 public class JFXArena extends Pane
 {
+    
+    private static final String CITADEL_RES = "rg1024-isometric-tower.png";
+    private Image citadel;
+
     // Represents an image to draw, retrieved as a project resource.
     private static final String IMAGE_FILE = "1554047213.png";
     private Image robot1;
@@ -25,6 +29,9 @@ public class JFXArena extends Pane
     private int gridHeight = 9;
     private double robotX = 1.0;
     private double robotY = 3.0;
+
+    private double citadelx = 4.0;
+    private double citadely = 4.0;
 
     private double gridSquareSize; // Auto-calculated
     private Canvas canvas; // Used to provide a 'drawing surface'.
@@ -45,7 +52,7 @@ public class JFXArena extends Pane
         // distributable version of your code with './gradlew build'. The approach below is how a 
         // project is supposed to read its own internal resources, and should work both for 
         // './gradlew run' and './gradlew build'.)
-                
+
         try(InputStream is = getClass().getClassLoader().getResourceAsStream(IMAGE_FILE))
         {
             if(is == null)
@@ -63,6 +70,39 @@ public class JFXArena extends Pane
         canvas.widthProperty().bind(widthProperty());
         canvas.heightProperty().bind(heightProperty());
         getChildren().add(canvas);
+
+        try(InputStream is = getClass().getClassLoader().getResourceAsStream(CITADEL_RES))
+        {
+            if(is == null)
+            {
+                throw new AssertionError("Cannot find image file " + IMAGE_FILE);
+            }
+            citadel = new Image(is);
+        }
+        catch(IOException e)
+        {
+            throw new AssertionError("Cannot load image file " + IMAGE_FILE, e);
+        }
+        
+        canvas = new Canvas();
+        canvas.widthProperty().bind(widthProperty());
+        canvas.heightProperty().bind(heightProperty());
+        getChildren().add(canvas);
+    }
+
+    public void setNewImage(String resource, Image sprite) {
+        try(InputStream is = getClass().getClassLoader().getResourceAsStream(resource))
+        {
+            if(is == null)
+            {
+                throw new AssertionError("Cannot find image file " + IMAGE_FILE);
+            }
+            sprite = new Image(is);
+        }
+        catch(IOException e)
+        {
+            throw new AssertionError("Cannot load image file " + IMAGE_FILE, e);
+        }
     }
     
     
@@ -150,6 +190,10 @@ public class JFXArena extends Pane
         // ** You will need to adapt this to the requirements of your application. **
         drawImage(gfx, robot1, robotX, robotY);
         drawLabel(gfx, "Robot Name", robotX, robotY);
+
+        drawImage(gfx, citadel, citadelx, citadely);
+        drawLabel(gfx, "Citadel", citadelx, citadely);
+        
     }
     
     
