@@ -56,6 +56,7 @@ public class Fortress {
         }
     }
 
+    // Method to increase wall count
     public void increaseWallCount() {
         remWalls++;
     }
