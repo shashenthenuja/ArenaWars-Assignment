@@ -43,9 +43,6 @@ public class Fortress {
                 wallQueue.add(newWall);
                 remWalls--;
             }
-
-        } else {
-            logger.appendText("No more walls available\n");
         }
     }
 
