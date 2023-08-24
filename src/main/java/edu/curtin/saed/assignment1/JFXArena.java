@@ -31,13 +31,13 @@ public class JFXArena extends Pane
     
     // The following values are arbitrary, and you may need to modify them according to the 
     // requirements of your application.
-    private int gridWidth = 9;
-    private int gridHeight = 9;
+    private int gridWidth = 6;
+    private int gridHeight = 6;
     private double robotX = 1.0;
     private double robotY = 3.0;
 
-    private double citadelx = 4.0;
-    private double citadely = 4.0;
+    private double citadelx = 0.0;
+    private double citadely = 0.0;
 
     private double wallx = 0.0;
     private double wally = 0.0;
@@ -98,6 +98,12 @@ public class JFXArena extends Pane
         canvas.widthProperty().bind(widthProperty());
         canvas.heightProperty().bind(heightProperty());
         getChildren().add(canvas);
+        setCitadelLocation();
+    }
+
+    public void setCitadelLocation() {
+        citadelx = gridWidth / 2;
+        citadely = gridHeight / 2;
     }
 
     public void setNewWall() {
