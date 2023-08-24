@@ -39,7 +39,7 @@ public class Fortress {
         if (remWalls > 0) {
             // check if the grid currently contains a wall and if it is already queued
             if (!wallQueue.contains(newWall) && !arena.containsImage(x, y)) {
-                logger.appendText("Wall Queue at " + "[" + (int) x + "," + (int) y + "]\n");
+                logger.appendText("Wall Queued at " + "[" + (int) x + "," + (int) y + "]\n");
                 wallQueue.add(newWall);
                 remWalls--;
             }
