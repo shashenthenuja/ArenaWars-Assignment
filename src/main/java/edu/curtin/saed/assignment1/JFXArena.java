@@ -22,6 +22,12 @@ public class JFXArena extends Pane
     // Represents an image to draw, retrieved as a project resource.
     private static final String IMAGE_FILE = "1554047213.png";
     private Image robot1;
+
+    private static final String WALL_RES = "181478.png";
+    private Image wall;
+
+    private static final String DESTRO_WALL_RSE = "181479.png";
+    private Image destroWall;
     
     // The following values are arbitrary, and you may need to modify them according to the 
     // requirements of your application.
@@ -33,10 +39,14 @@ public class JFXArena extends Pane
     private double citadelx = 4.0;
     private double citadely = 4.0;
 
+    private double wallx = 0.0;
+    private double wally = 0.0;
+
     private double gridSquareSize; // Auto-calculated
     private Canvas canvas; // Used to provide a 'drawing surface'.
 
     private List<ArenaListener> listeners = null;
+    private Map<String, Image> images = new HashMap<>();
     
     /**
      * Creates a new arena object, loading the robot image and initialising a drawing surface.
@@ -90,19 +100,24 @@ public class JFXArena extends Pane
         getChildren().add(canvas);
     }
 
-    public void setNewImage(String resource, Image sprite) {
-        try(InputStream is = getClass().getClassLoader().getResourceAsStream(resource))
+    public void setNewWall() {
+        try(InputStream is = getClass().getClassLoader().getResourceAsStream(WALL_RES))
         {
             if(is == null)
             {
                 throw new AssertionError("Cannot find image file " + IMAGE_FILE);
             }
-            sprite = new Image(is);
+            wall = new Image(is);
         }
         catch(IOException e)
         {
             throw new AssertionError("Cannot load image file " + IMAGE_FILE, e);
         }
+
+        canvas = new Canvas();
+        canvas.widthProperty().bind(widthProperty());
+        canvas.heightProperty().bind(heightProperty());
+        getChildren().add(canvas);
     }
     
     
@@ -114,7 +129,27 @@ public class JFXArena extends Pane
     {
         robotX = x;
         robotY = y;
+        String key = getKey(x, y);
+        images.put(key, robot1);
         requestLayout();
+    }
+
+    public void addNewWall(double x, double y)
+    {
+        wallx = x;
+        wally = y;
+        String key = getKey(x, y);
+        images.put(key, wall);
+        requestLayout();
+    }
+
+    public boolean containsImage(double x, double y) {
+        String key = getKey(x, y);
+        return images.containsKey(key);
+    }
+
+    private String getKey(double x, double y) {
+        return x + "," + y;
     }
     
     /**
@@ -190,9 +225,14 @@ public class JFXArena extends Pane
         // ** You will need to adapt this to the requirements of your application. **
         drawImage(gfx, robot1, robotX, robotY);
         drawLabel(gfx, "Robot Name", robotX, robotY);
+        images.put(getKey(robotX, robotY), robot1);
 
         drawImage(gfx, citadel, citadelx, citadely);
         drawLabel(gfx, "Citadel", citadelx, citadely);
+        images.put(getKey(citadelx, citadely), citadel);
+
+        drawImage(gfx, wall, wallx, wally);
+        
         
     }
     

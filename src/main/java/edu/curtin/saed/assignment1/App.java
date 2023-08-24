@@ -15,9 +15,13 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         stage.setTitle("Arena Wars (JavaFX)");
+        TextArea logger = new TextArea();
         JFXArena arena = new JFXArena();
+        Fortress fort = new Fortress(arena);
+        fort.processWallRequests();
         arena.addListener((x, y) -> {
             System.out.println("Arena click at (" + x + "," + y + ")");
+            fort.requestWall(x, y, logger);
         });
 
         ToolBar toolbar = new ToolBar();
@@ -31,10 +35,6 @@ public class App extends Application {
         // {
         // System.out.println("Button 1 pressed");
         // });
-
-        TextArea logger = new TextArea();
-        logger.appendText("Hello\n");
-        logger.appendText("World\n");
 
         SplitPane splitPane = new SplitPane();
         splitPane.getItems().addAll(arena, logger);
@@ -51,6 +51,7 @@ public class App extends Application {
         updateScore(label);
     }
 
+    // Method to update scores in a new thread
     public void updateScore(Label label) {
         Score score = new Score();
         Thread scoreThread = new Thread(() -> {
@@ -63,7 +64,7 @@ public class App extends Application {
                     });
 
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    break;
                 }
             }
         });
