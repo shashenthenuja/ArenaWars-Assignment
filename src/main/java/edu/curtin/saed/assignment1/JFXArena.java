@@ -22,6 +22,14 @@ public class JFXArena extends Pane
     // Represents an image to draw, retrieved as a project resource.
     private static final String IMAGE_FILE = "1554047213.png";
     private Image robot1;
+    private Image robot;
+    private String robotId = "";
+
+    private static final String ROBOT_2_RES = "droid2.png";
+    private Image robot2;
+
+    private static final String ROBOT_3_RES = "rg1024-robot-carrying-things-4.png";
+    private Image robot3;
 
     private static final String WALL_RES = "181478.png";
     private Image wall;
@@ -31,10 +39,10 @@ public class JFXArena extends Pane
     
     // The following values are arbitrary, and you may need to modify them according to the 
     // requirements of your application.
-    private int gridWidth = 6;
-    private int gridHeight = 6;
-    private double robotX = 1.0;
-    private double robotY = 3.0;
+    private int gridWidth = 9;
+    private int gridHeight = 9;
+    private double robotX = 0.0;
+    private double robotY = 0.0;
 
     private double citadelx = 0.0;
     private double citadely = 0.0;
@@ -98,12 +106,12 @@ public class JFXArena extends Pane
         canvas.widthProperty().bind(widthProperty());
         canvas.heightProperty().bind(heightProperty());
         getChildren().add(canvas);
-        setCitadelLocation();
     }
 
     public void setCitadelLocation() {
         citadelx = gridWidth / 2;
         citadely = gridHeight / 2;
+        images.put(getKey(citadelx, citadely), citadel);
     }
 
     public void setNewWall() {
@@ -125,6 +133,63 @@ public class JFXArena extends Pane
         canvas.heightProperty().bind(heightProperty());
         getChildren().add(canvas);
     }
+
+    public void setNewRobot(int type) {
+        switch (type) {
+            case 1:
+                try(InputStream is = getClass().getClassLoader().getResourceAsStream(IMAGE_FILE))
+                {
+                    if(is == null)
+                    {
+                        throw new AssertionError("Cannot find image file " + IMAGE_FILE);
+                    }
+                    robot1 = new Image(is);
+                    robot = robot1;
+                }
+                catch(IOException e)
+                {
+                    throw new AssertionError("Cannot load image file " + IMAGE_FILE, e);
+                }
+                break;
+            case 2:
+                try(InputStream is = getClass().getClassLoader().getResourceAsStream(ROBOT_2_RES))
+                {
+                    if(is == null)
+                    {
+                        throw new AssertionError("Cannot find image file " + ROBOT_2_RES);
+                    }
+                    robot2 = new Image(is);
+                    robot = robot2;
+                }
+                catch(IOException e)
+                {
+                    throw new AssertionError("Cannot load image file " + ROBOT_2_RES, e);
+                }
+                break;
+            case 3:
+                try(InputStream is = getClass().getClassLoader().getResourceAsStream(ROBOT_3_RES))
+                {
+                    if(is == null)
+                    {
+                        throw new AssertionError("Cannot find image file " + ROBOT_3_RES);
+                    }
+                    robot3 = new Image(is);
+                    robot = robot3;
+                }
+                catch(IOException e)
+                {
+                    throw new AssertionError("Cannot load image file " + ROBOT_3_RES, e);
+                }
+                break;
+            default:
+                break;
+        }
+
+        canvas = new Canvas();
+        canvas.widthProperty().bind(widthProperty());
+        canvas.heightProperty().bind(heightProperty());
+        getChildren().add(canvas);
+    }
     
     
     /**
@@ -136,9 +201,68 @@ public class JFXArena extends Pane
         robotX = x;
         robotY = y;
         String key = getKey(x, y);
-        images.put(key, robot1);
+        images.put(key, robot2);
         requestLayout();
     }
+
+    public void addNewRobot(double x, double y, String id, int typeId)
+    {
+        robotX = x;
+        robotY = y;
+        robotId = id;
+        String key = getKey(x, y);
+        images.put(key, getRobotImage(typeId));
+        requestLayout();
+    }
+
+    public Image getRobotImage(int id) {
+        Image robot;
+        switch (id) {
+            case 1:
+                robot = robot1;
+                break;
+            case 2:
+                robot = robot2;
+                break;
+            case 3:
+                robot = robot3;
+                break;
+            default:
+                robot = null;
+                break;
+        }
+        return robot;
+    }
+
+    public double[] getSpawnCoordinates() {
+        double[] topLeft = {0.0, 0.0};
+        double[] topRight = {0.0, (double) gridHeight - 1.0};
+        double[] bottomLeft = {(double) gridWidth - 1.0, 0.0};
+        double[] bottomRight = {(double) gridWidth - 1.0, (double) gridHeight - 1.0};
+    
+        if (!containsImage(topLeft[0], topLeft[1])) {
+            System.out.println("Checking topLeft: (" + topLeft[0] + ", " + topLeft[1] + ")");
+            return topLeft;
+        }
+        if (!containsImage(topRight[0], topRight[1])) {
+            // System.out.println(topRight[0] + topRight[1]);
+            System.out.println("Checking topRight: (" + topRight[0] + ", " + topRight[1] + ")");
+            return topRight;
+        }
+        if (!containsImage(bottomLeft[0], bottomLeft[1])) {
+            // System.out.println(bottomLeft[0] + bottomLeft[1]);
+            System.out.println("Checking bottomLeft: (" + bottomLeft[0] + ", " + bottomLeft[1] + ")");
+            return bottomLeft;
+        }
+        if (!containsImage(bottomRight[0], bottomRight[1])) {
+            // System.out.println(bottomRight[0] + bottomRight[1]);
+            System.out.println("Checking bottomRight: (" + bottomRight[0] + ", " + bottomRight[1] + ")");
+            return bottomRight;
+        }
+        
+        return null;
+    }
+    
 
     public void addNewWall(double x, double y)
     {
@@ -155,7 +279,7 @@ public class JFXArena extends Pane
     }
 
     private String getKey(double x, double y) {
-        return x + "," + y;
+        return String.valueOf(x) + "," + String.valueOf(y);
     }
     
     /**
@@ -229,16 +353,14 @@ public class JFXArena extends Pane
 
         // Invoke helper methods to draw things at the current location.
         // ** You will need to adapt this to the requirements of your application. **
-        drawImage(gfx, robot1, robotX, robotY);
-        drawLabel(gfx, "Robot Name", robotX, robotY);
-        images.put(getKey(robotX, robotY), robot1);
 
         drawImage(gfx, citadel, citadelx, citadely);
         drawLabel(gfx, "Citadel", citadelx, citadely);
-        images.put(getKey(citadelx, citadely), citadel);
 
         drawImage(gfx, wall, wallx, wally);
-        
+
+        drawImage(gfx, robot, robotX, robotY);
+        drawLabel(gfx, robotId, robotX, robotY);
         
     }
     

@@ -17,10 +17,12 @@ public class App extends Application {
         stage.setTitle("Arena Wars (JavaFX)");
         TextArea logger = new TextArea();
         JFXArena arena = new JFXArena();
+        arena.setCitadelLocation();
         Fortress fort = new Fortress(arena);
+        Spawn spawn = new Spawn(arena);
         fort.processWallRequests();
         arena.addListener((x, y) -> {
-            System.out.println("Arena click at (" + x + "," + y + ")");
+            //System.out.println("Arena click at (" + x + "," + y + ")");
             fort.requestWall(x, y, logger);
         });
 
@@ -47,6 +49,9 @@ public class App extends Application {
         Scene scene = new Scene(contentPane, 800, 800);
         stage.setScene(scene);
         stage.show();
+
+        spawn.requestRobot();
+        spawn.processRobotRequests(logger);
 
         updateScore(label);
     }
