@@ -37,8 +37,11 @@ public class JFXArena extends Pane
     private static final String WALL_RES = "181478.png";
     private Image wall;
 
-    private static final String DESTRO_WALL_RSE = "181479.png";
+    private static final String DESTRO_WALL_RES = "181479.png";
     private Image destroWall;
+
+    private static final String GAME_END_RES = "cross.png";
+    private Image gameEnd;
     
     // The following values are arbitrary, and you may need to modify them according to the 
     // requirements of your application.
@@ -58,7 +61,6 @@ public class JFXArena extends Pane
 
     private List<ArenaListener> listeners = null;
     private Map<String, String> images = new ConcurrentHashMap<>();
-    private Object mutex = new Object();
     
     /**
      * Creates a new arena object, loading the robot image and initialising a drawing surface.
@@ -140,7 +142,7 @@ public class JFXArena extends Pane
             throw new AssertionError("Cannot load image file " + IMAGE_FILE, e);
         }
 
-        try(InputStream is = getClass().getClassLoader().getResourceAsStream(DESTRO_WALL_RSE))
+        try(InputStream is = getClass().getClassLoader().getResourceAsStream(DESTRO_WALL_RES))
         {
             if(is == null)
             {
@@ -153,6 +155,18 @@ public class JFXArena extends Pane
             throw new AssertionError("Cannot load image file " + IMAGE_FILE, e);
         }
 
+        try(InputStream is = getClass().getClassLoader().getResourceAsStream(GAME_END_RES))
+        {
+            if(is == null)
+            {
+                throw new AssertionError("Cannot find image file " + IMAGE_FILE);
+            }
+            gameEnd = new Image(is);
+        }
+        catch(IOException e)
+        {
+            throw new AssertionError("Cannot load image file " + IMAGE_FILE, e);
+        }
         
         canvas = new Canvas();
         canvas.widthProperty().bind(widthProperty());
@@ -252,19 +266,19 @@ public class JFXArena extends Pane
         double[] topRight  = {(double) gridWidth - 1.0, 0.0};
         double[] bottomRight = {(double) gridWidth - 1.0, (double) gridHeight - 1.0};
     
-        if (!containsImage(topLeft[0], topLeft[1])) {
+        if (!containsRobot(topLeft[0], topLeft[1])) {
             //System.out.println("Spawning " + topLeft[0] + ", " + topLeft[1]);
             return topLeft;
         }
-        if (!containsImage(bottomLeft[0], bottomLeft[1])) {
+        if (!containsRobot(bottomLeft[0], bottomLeft[1])) {
             //System.out.println(bottomLeft[0] + ", " + bottomLeft[1]);
             return bottomLeft;
         }
-        if (!containsImage(topRight[0], topRight[1])) {
+        if (!containsRobot(topRight[0], topRight[1])) {
             //System.out.println(topRight[0] + ", " + topRight[1]);
             return topRight;
         }
-        if (!containsImage(bottomRight[0], bottomRight[1])) {
+        if (!containsRobot(bottomRight[0], bottomRight[1])) {
             //System.out.println(bottomRight[0] + ", " + bottomRight[1]);
             return bottomRight;
         }
@@ -286,6 +300,13 @@ public class JFXArena extends Pane
         String key = getKey(x, y);
         images.remove(key);
         images.put(key, "destrowall");
+        requestLayout();
+    }
+
+    public void gameEnd(double x, double y) {
+        String key = getKey(x, y);
+        images.remove(key);
+        images.put(key, "gameEnd");
         requestLayout();
     }
 
@@ -446,6 +467,9 @@ public class JFXArena extends Pane
                 // Draw the citadel image and label
                 drawImage(gfx, citadel, x, y);
                 drawLabel(gfx, "Citadel", x, y);
+            } else if (value.equals("gameEnd")) {
+                // Draw the game end image
+                drawImage(gfx, gameEnd, x, y);
             }
         }
     }

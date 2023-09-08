@@ -8,15 +8,17 @@ import javafx.scene.control.TextArea;
 public class Movement implements Runnable {
     private Robot robot;
     private JFXArena arena;
+    private App app;
     private Score score;
     private Thread moveThread;
     private TextArea logger;
 
-    public Movement(Robot robot, JFXArena arena, TextArea logger, Score score) {
+    public Movement(Robot robot, JFXArena arena, TextArea logger, Score score, App app) {
         this.robot = robot;
         this.arena = arena;
         this.logger = logger;
         this.score = score;
+        this.app = app;
     }
 
     public void moveDown() {
@@ -31,11 +33,9 @@ public class Movement implements Runnable {
                     double robotY = robot.getY() + 0.1;
                     double newY = Math.round(robotY * 10.0) / 10.0;
                     robot.setY(newY);
-                    Platform.runLater(() -> {
-                        arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
-                        arena.requestLayout();
-                        arena.removeKey(robot.getX(), oldY);
-                    });
+                    arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
+                    arena.requestLayout();
+                    arena.removeKey(robot.getX(), oldY);
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
@@ -58,11 +58,9 @@ public class Movement implements Runnable {
                     double robotY = robot.getY() - 0.1;
                     double newY = Math.round(robotY * 10.0) / 10.0;
                     robot.setY(newY);
-                    Platform.runLater(() -> {
-                        arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
-                        arena.requestLayout();
-                        arena.removeKey(robot.getX(), oldY);
-                    });
+                    arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
+                    arena.requestLayout();
+                    arena.removeKey(robot.getX(), oldY);
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
@@ -85,11 +83,9 @@ public class Movement implements Runnable {
                     double robotX = robot.getX() - 0.1;
                     double newX = Math.round(robotX * 10.0) / 10.0;
                     robot.setX(newX);
-                    Platform.runLater(() -> {
-                        arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
-                        arena.requestLayout();
-                        arena.removeKey(oldX, robot.getY());
-                    });
+                    arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
+                    arena.requestLayout();
+                    arena.removeKey(oldX, robot.getY());
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
@@ -112,11 +108,9 @@ public class Movement implements Runnable {
                     double robotX = robot.getX() + 0.1;
                     double newX = Math.round(robotX * 10.0) / 10.0;
                     robot.setX(newX);
-                    Platform.runLater(() -> {
-                        arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
-                        arena.requestLayout();
-                        arena.removeKey(oldX, robot.getY());
-                    });
+                    arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
+                    arena.requestLayout();
+                    arena.removeKey(oldX, robot.getY());
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
@@ -128,12 +122,12 @@ public class Movement implements Runnable {
     }
 
     public void movementLogic() {
-        // move the robots in random ways and wall destruction
+        // move the robots in random ways, wall destruction and game end
         if (robot != null) {
             int mov = ThreadLocalRandom.current().nextInt(4) + 1;
             switch (mov) {
                 case 1:
-                    // check if the next path contains wall and destroy them
+                    // check if the next path contains wall and destroy them else end the game
                     if (arena.containsWall(robot.getX(), robot.getY() + 1.0)) {
                         moveDown();
                         arena.destroyWall(robot.getX(), robot.getY());
@@ -148,12 +142,18 @@ public class Movement implements Runnable {
                                 + (int) robot.getY() + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
+                    } else if (arena.containsCitadel(robot.getX(), robot.getY() + 1.0)) {
+                        moveDown();
+                        logMessage("Game Over!\n");
+                        logMessage("Final Score : " + score.getScore() + "\n");
+                        arena.gameEnd(robot.getX(), robot.getY());
+                        app.endGame();
                     } else {
                         moveDown();
                     }
                     break;
                 case 2:
-                    // check if the next path contains wall and destroy them
+                    // check if the next path contains wall and destroy them else end the game
                     if (arena.containsWall(robot.getX(), robot.getY() - 1.0)) {
                         moveUp();
                         arena.destroyWall(robot.getX(), robot.getY());
@@ -168,12 +168,18 @@ public class Movement implements Runnable {
                                 + (int) robot.getY() + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
+                    } else if (arena.containsCitadel(robot.getX(), robot.getY() - 1.0)) {
+                        moveUp();
+                        logMessage("Game Over!\n");
+                        logMessage("Final Score : " + score.getScore() + "\n");
+                        arena.gameEnd(robot.getX(), robot.getY());
+                        app.endGame();
                     } else {
                         moveUp();
                     }
                     break;
                 case 3:
-                    // check if the next path contains wall and destroy them
+                    // check if the next path contains wall and destroy them else end the game
                     if (arena.containsWall(robot.getX() - 1.0, robot.getY())) {
                         moveLeft();
                         arena.destroyWall(robot.getX(), robot.getY());
@@ -188,12 +194,18 @@ public class Movement implements Runnable {
                                 + (int) robot.getY() + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
+                    } else if (arena.containsCitadel(robot.getX() - 1.0, robot.getY())) {
+                        moveLeft();
+                        logMessage("Game Over!\n");
+                        logMessage("Final Score : " + score.getScore() + "\n");
+                        arena.gameEnd(robot.getX(), robot.getY());
+                        app.endGame();
                     } else {
                         moveLeft();
                     }
                     break;
                 case 4:
-                    // check if the next path contains wall and destroy them
+                    // check if the next path contains wall and destroy them else end the game
                     if (arena.containsWall(robot.getX() + 1.0, robot.getY())) {
                         moveRight();
                         arena.destroyWall(robot.getX(), robot.getY());
@@ -208,6 +220,12 @@ public class Movement implements Runnable {
                                 + (int) robot.getY() + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
+                    } else if (arena.containsCitadel(robot.getX() + 1.0, robot.getY())) {
+                        moveRight();
+                        logMessage("Game Over!\n");
+                        logMessage("Final Score : " + score.getScore() + "\n");
+                        arena.gameEnd(robot.getX(), robot.getY());
+                        app.endGame();
                     } else {
                         moveRight();
                     }

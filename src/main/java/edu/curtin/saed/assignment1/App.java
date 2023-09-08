@@ -11,6 +11,9 @@ import javafx.stage.WindowEvent;
 
 public class App extends Application {
     private Thread scoreThread;
+    private Score score;
+    private Fortress fort;
+    private Spawn spawn;
 
     public static void main(String[] args) {
         launch();
@@ -28,9 +31,9 @@ public class App extends Application {
         ToolBar toolbar = new ToolBar(label, space, label2);
         arena.setCitadelLocation();
 
-        Score score = new Score();
-        Fortress fort = new Fortress(arena, label2);
-        Spawn spawn = new Spawn(arena, logger);
+        score = new Score();
+        fort = new Fortress(arena, label2);
+        spawn = new Spawn(arena, logger);
         fort.run();
 
         arena.addListener((x, y) -> {
@@ -60,16 +63,14 @@ public class App extends Application {
         stage.show();
 
         spawn.requestRobot();
-        spawn.processRobotRequests(score);
+        spawn.processRobotRequests(score, this);
 
         updateScore(score, stage, label);
 
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                fort.endThread();
-                spawn.endThreads();
-                scoreThread.interrupt();
+                endGame();
             }
         });
 
@@ -93,5 +94,12 @@ public class App extends Application {
             }
         });
         scoreThread.start();
+    }
+
+    // Method to interrupt all the threads except GUI to end the game
+    public void endGame() {
+        fort.endThread();
+        spawn.endThreads();
+        scoreThread.interrupt();
     }
 }

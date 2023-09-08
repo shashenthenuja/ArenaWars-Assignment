@@ -28,7 +28,7 @@ public class Spawn {
      * Method to process the robot requests in the blockingqueue using the
      * threadpool
      */
-    public void processRobotRequests(Score score) {
+    public void processRobotRequests(Score score, App app) {
         robotExecutor.submit(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
@@ -41,7 +41,7 @@ public class Spawn {
                                     + (int) request.getY() + "]\n");
                         });
                         // add the movement to a list so the threads can be interrupted later
-                        movementThreads.add(new Movement(request, arena, logger, score));
+                        movementThreads.add(new Movement(request, arena, logger, score, app));
                         movementThreads.get(movementThreads.size() - 1).run();
                     }
                 } catch (InterruptedException e) {
