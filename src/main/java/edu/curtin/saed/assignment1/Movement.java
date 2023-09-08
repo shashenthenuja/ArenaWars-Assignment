@@ -8,13 +8,15 @@ import javafx.scene.control.TextArea;
 public class Movement {
     private Robot robot;
     private JFXArena arena;
+    private Score score;
     private Thread moveThread;
     private TextArea logger;
 
-    public Movement(Robot robot, JFXArena arena, TextArea logger) {
+    public Movement(Robot robot, JFXArena arena, TextArea logger, Score score) {
         this.robot = robot;
         this.arena = arena;
         this.logger = logger;
+        this.score = score;
     }
 
     public void moveDown() {
@@ -142,11 +144,13 @@ public class Movement {
                         arena.destroyWall(robot.getX(), robot.getY());
                         logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        score.addDestroyBonus();
                     }else if (arena.containsDestroWall(robot.getX(), robot.getY() + 1.0)) {
                         moveDown();
                         arena.removeKey(robot.getX(), robot.getY());
                         logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        score.addDestroyBonus();
                     }else {
                         moveDown();
                     }
@@ -158,11 +162,13 @@ public class Movement {
                         arena.destroyWall(robot.getX(), robot.getY());
                         logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        score.addDestroyBonus();
                     }else if (arena.containsDestroWall(robot.getX(), robot.getY() - 1.0)) {
                         moveUp();
                         arena.removeKey(robot.getX(), robot.getY());
                         logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        score.addDestroyBonus();
                     }else {
                         moveUp();
                     }
@@ -174,11 +180,13 @@ public class Movement {
                         arena.destroyWall(robot.getX(), robot.getY());
                         logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        score.addDestroyBonus();
                     }else if (arena.containsDestroWall(robot.getX() - 1.0, robot.getY())) {
                         moveLeft();
                         arena.removeKey(robot.getX(), robot.getY());
                         logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        score.addDestroyBonus();
                     }else {
                         moveLeft();
                     }
@@ -190,11 +198,13 @@ public class Movement {
                         arena.destroyWall(robot.getX(), robot.getY());
                         logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        score.addDestroyBonus();
                     }else if (arena.containsDestroWall(robot.getX() + 1.0, robot.getY())) {
                         moveRight();
                         arena.removeKey(robot.getX(), robot.getY());
                         logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        score.addDestroyBonus();
                     }else {
                         moveRight();
                     }

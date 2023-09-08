@@ -60,7 +60,7 @@ public class App extends Application {
         stage.show();
 
         spawn.requestRobot();
-        spawn.processRobotRequests();
+        spawn.processRobotRequests(score);
 
         updateScore(score, stage, label);
 
