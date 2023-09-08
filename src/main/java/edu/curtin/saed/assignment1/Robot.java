@@ -3,6 +3,8 @@ package edu.curtin.saed.assignment1;
 import java.util.Objects;
 import java.util.Random;
 
+import javafx.scene.control.TextArea;
+
 public class Robot {
     private double x;
     private double y;
@@ -11,16 +13,18 @@ public class Robot {
     private String id;
     private Random random = new Random();
     private JFXArena arena;
+    private TextArea logger;
     private Movement movement;
 
-    public Robot(JFXArena arena, double x, double y, String id, int typeId) {
+    public Robot(JFXArena arena, TextArea logger, double x, double y, String id, int typeId) {
         this.arena = arena;
+        this.logger = logger;
         this.x = x;
         this.y = y;
         this.id = id;
         this.typeId = typeId;
         this.delay = random.nextInt(2000 - 500 + 1) + 500;
-        movement = new Movement(this, arena);
+        movement = new Movement(this, arena, logger);
         movement.move();
     }
 

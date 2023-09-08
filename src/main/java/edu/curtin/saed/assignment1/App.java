@@ -22,7 +22,7 @@ public class App extends Application {
         arena.setCitadelLocation();
         Score score = new Score();
         Fortress fort = new Fortress(arena);
-        Spawn spawn = new Spawn(arena);
+        Spawn spawn = new Spawn(arena, logger);
         fort.processWallRequests();
         arena.addListener((x, y) -> {
             // System.out.println("Arena click at (" + x + "," + y + ")");
@@ -55,7 +55,7 @@ public class App extends Application {
         stage.show();
 
         spawn.requestRobot();
-        spawn.processRobotRequests(logger);
+        spawn.processRobotRequests();
 
         updateScore(score, stage, label);
 

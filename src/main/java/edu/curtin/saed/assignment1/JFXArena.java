@@ -282,6 +282,13 @@ public class JFXArena extends Pane
         requestLayout();
     }
 
+    public void destroyWall(double x, double y) {
+        String key = getKey(x, y);
+        images.remove(key);
+        images.put(key, "destrowall");
+        requestLayout();
+    }
+
     public boolean containsImage(double x, double y) {
         String key = getKey(x, y);
         return images.containsKey(key);
@@ -290,8 +297,13 @@ public class JFXArena extends Pane
     public boolean containsRobot(double x, double y) {
         String key = getKey(x, y);
         String value = images.get(key);
-        
-        return value != null && value.contains("Robot");
+
+        if (value != null) {
+            if (value.contains("Robot") || value.equals("null")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean containsWall(double x, double y) {
@@ -299,6 +311,13 @@ public class JFXArena extends Pane
         String value = images.get(key);
         
         return value != null && value.equals("wall");
+    }
+
+    public boolean containsDestroWall(double x, double y) {
+        String key = getKey(x, y);
+        String value = images.get(key);
+        
+        return value != null && value.equals("destrowall");
     }
 
     public boolean containsCitadel(double x, double y) {
@@ -404,17 +423,17 @@ public class JFXArena extends Pane
                     case 1:
                         drawImage(gfx, robot1, x, y);
                         drawLabel(gfx, robot_id, x, y);
-                        requestLayout();
+                        //requestLayout();
                         break;
                     case 2:
                         drawImage(gfx, robot2, x, y);
                         drawLabel(gfx, robot_id, x, y);
-                        requestLayout();
+                        //requestLayout();
                         break;
                     case 3:
                         drawImage(gfx, robot3, x, y);
                         drawLabel(gfx, robot_id, x, y);
-                        requestLayout();
+                        //requestLayout();
                         break;
                     default:
                         break;

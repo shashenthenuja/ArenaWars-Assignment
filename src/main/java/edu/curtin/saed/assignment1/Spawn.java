@@ -13,18 +13,19 @@ public class Spawn {
     private JFXArena arena;
     private BlockingQueue<Robot> robotQueue = new LinkedBlockingQueue<>();
     private ExecutorService robotExecutor = Executors.newCachedThreadPool();
-
+    private TextArea logger;
     private int robotCount = 1;
 
-    public Spawn(JFXArena arena) {
+    public Spawn(JFXArena arena, TextArea logger) {
         this.arena = arena;
+        this.logger = logger;
     }
 
     /*
      * Method to process the robot requests in the blockingqueue using the
      * threadpool
      */
-    public void processRobotRequests(TextArea logger) {
+    public void processRobotRequests() {
         robotExecutor.submit(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
@@ -56,7 +57,7 @@ public class Spawn {
                     if (coordinates != null) {
                         Random random = new Random();
                         int robotType = random.nextInt(3) + 1;
-                        Robot newRobot = new Robot(arena, coordinates[0], coordinates[1], "Robot " + robotCount,
+                        Robot newRobot = new Robot(arena, logger, coordinates[0], coordinates[1], "Robot " + robotCount,
                                 robotType);
                         robotQueue.add(newRobot);
                         robotCount++;
