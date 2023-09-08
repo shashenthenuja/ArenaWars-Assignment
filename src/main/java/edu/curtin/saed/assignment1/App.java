@@ -19,24 +19,29 @@ public class App extends Application {
         stage.setTitle("Arena Wars (JavaFX)");
         TextArea logger = new TextArea();
         JFXArena arena = new JFXArena();
+        Label label = new Label("Score: 0");
+        Label label2 = new Label("Walls Queued : 0");
+        Pane space = new Pane();
+        HBox.setHgrow(space, javafx.scene.layout.Priority.ALWAYS);
+        ToolBar toolbar = new ToolBar(label, space, label2);
         arena.setCitadelLocation();
+
         Score score = new Score();
-        Fortress fort = new Fortress(arena);
+        Fortress fort = new Fortress(arena, label2);
         Spawn spawn = new Spawn(arena, logger);
         fort.processWallRequests();
+        
+
         arena.addListener((x, y) -> {
-            // System.out.println("Arena click at (" + x + "," + y + ")");
             fort.requestWall(x, y, logger);
             // score.addDestroyBonus();
         });
 
-        ToolBar toolbar = new ToolBar();
         // Button btn1 = new Button("My Button 1");
         // Button btn2 = new Button("My Button 2");
-        Label label = new Label("Score: 0");
+        
         // toolbar.getItems().addAll(btn1, btn2, label);
-        toolbar.getItems().addAll(label);
-
+        
         // btn1.setOnAction((event) ->
         // {
         // System.out.println("Button 1 pressed");

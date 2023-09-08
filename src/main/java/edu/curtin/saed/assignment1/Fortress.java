@@ -4,18 +4,22 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
 public class Fortress {
     private JFXArena arena;
+    private Label label;
     private BlockingQueue<Wall> wallQueue = new ArrayBlockingQueue<>(10);
     private static final int MAX_WALLS = 10;
     private Thread fortThread;
 
     private int remWalls = MAX_WALLS;
+    private int queuedWalls = 0;
 
-    public Fortress(JFXArena arena) {
+    public Fortress(JFXArena arena, Label label) {
         this.arena = arena;
+        this.label = label;
     }
 
     // Method to process Wall requests from blocking queue and add them
@@ -26,6 +30,10 @@ public class Fortress {
                     if (!wallQueue.isEmpty()) {
                         Wall request = wallQueue.poll();
                         addNewWall(request.getX(), request.getY());
+                        queuedWalls--;
+                        Platform.runLater(() -> {
+                            label.setText("Walls Queued : " + String.valueOf(queuedWalls));
+                        });
                         Thread.sleep(2000);
                     }
                 } catch (InterruptedException e) {
@@ -44,8 +52,12 @@ public class Fortress {
             if (!wallQueue.contains(newWall) && !arena.containsImage(x, y)) {
                 wallQueue.add(newWall);
                 remWalls--;
-                logger.appendText("Wall Queued at " + "[" + (int) x + "," + (int) y + "] - " + "(" + remWalls + ")"
-                        + " walls remaining\n");
+                queuedWalls++;
+                Platform.runLater(() -> {
+                    logger.appendText("Wall Queued at " + "[" + (int) x + "," + (int) y + "] - " + "(" + remWalls + ")"
+                            + " walls remaining\n");
+                    label.setText("Walls Queued : " + String.valueOf(queuedWalls));
+                });
             }
         }
     }

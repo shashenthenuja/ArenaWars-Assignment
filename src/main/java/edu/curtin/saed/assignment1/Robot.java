@@ -12,20 +12,13 @@ public class Robot {
     private int typeId;
     private String id;
     private Random random = new Random();
-    private JFXArena arena;
-    private TextArea logger;
-    private Movement movement;
 
-    public Robot(JFXArena arena, TextArea logger, double x, double y, String id, int typeId) {
-        this.arena = arena;
-        this.logger = logger;
+    public Robot(double x, double y, String id, int typeId) {
         this.x = x;
         this.y = y;
         this.id = id;
         this.typeId = typeId;
         this.delay = random.nextInt(2000 - 500 + 1) + 500;
-        movement = new Movement(this, arena, logger);
-        movement.move();
     }
 
     // override hashcode to check if robot object is same

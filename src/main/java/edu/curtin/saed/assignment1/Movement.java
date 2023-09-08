@@ -18,104 +18,112 @@ public class Movement {
     }
 
     public void moveDown() {
-        if (robot.getY() < arena.getGridHeight() - 1.0 && !arena.containsRobot(robot.getX(), robot.getY() + 1.0)) {
-            // Occupy current square and next square
-            arena.occupySquare(robot.getX(), robot.getY());
-            arena.occupySquare(robot.getX(), robot.getY() + 1.0);
-            // move each 0.1 increment until a full square
-            for (int i = 0; i < 10; i++) {
-                double oldY = robot.getY();
-                double robotY = robot.getY() + 0.1;
-                double newY = Math.round(robotY * 10.0) / 10.0;
-                robot.setY(newY);
-                Platform.runLater(() -> {
-                    arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
-                    arena.requestLayout();
-                    arena.removeKey(robot.getX(), oldY);
-                });
-                try {
-                    Thread.sleep(40);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+        if (robot != null) {
+            if (robot.getY() < arena.getGridHeight() - 1.0 && !arena.containsRobot(robot.getX(), robot.getY() + 1.0)) {
+                // Occupy current square and next square
+                arena.occupySquare(robot.getX(), robot.getY());
+                arena.occupySquare(robot.getX(), robot.getY() + 1.0);
+                // move each 0.1 increment until a full square
+                for (int i = 0; i < 10; i++) {
+                    double oldY = robot.getY();
+                    double robotY = robot.getY() + 0.1;
+                    double newY = Math.round(robotY * 10.0) / 10.0;
+                    robot.setY(newY);
+                    Platform.runLater(() -> {
+                        arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
+                        arena.requestLayout();
+                        arena.removeKey(robot.getX(), oldY);
+                    });
+                    try {
+                        Thread.sleep(40);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
             }
         }
     }
 
     public void moveUp() {
-        if (robot.getY() > 0.0 && !arena.containsRobot(robot.getX(), robot.getY() - 1.0)) {
-            // Occupy current square and next square
-            arena.occupySquare(robot.getX(), robot.getY());
-            arena.occupySquare(robot.getX(), robot.getY() - 1.0);
-            // move each 0.1 increment until a full square
-            for (int i = 0; i < 10; i++) {
-                double oldY = robot.getY();
-                double robotY = robot.getY() - 0.1;
-                double newY = Math.round(robotY * 10.0) / 10.0;
-                robot.setY(newY);
-                Platform.runLater(() -> {
-                    arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
-                    arena.requestLayout();
-                    arena.removeKey(robot.getX(), oldY);
-                });
-                try {
-                    Thread.sleep(40);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+        if (robot != null) {
+            if (robot.getY() > 0.0 && !arena.containsRobot(robot.getX(), robot.getY() - 1.0)) {
+                // Occupy current square and next square
+                arena.occupySquare(robot.getX(), robot.getY());
+                arena.occupySquare(robot.getX(), robot.getY() - 1.0);
+                // move each 0.1 increment until a full square
+                for (int i = 0; i < 10; i++) {
+                    double oldY = robot.getY();
+                    double robotY = robot.getY() - 0.1;
+                    double newY = Math.round(robotY * 10.0) / 10.0;
+                    robot.setY(newY);
+                    Platform.runLater(() -> {
+                        arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
+                        arena.requestLayout();
+                        arena.removeKey(robot.getX(), oldY);
+                    });
+                    try {
+                        Thread.sleep(40);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
             }
         }
     }
 
     public void moveLeft() {
-        if (robot.getX() > 0.0 && !arena.containsRobot(robot.getX() - 1.0, robot.getY())) {
-            // Occupy current square and next square
-            arena.occupySquare(robot.getX(), robot.getY());
-            arena.occupySquare(robot.getX() - 1.0, robot.getY());
-            // move each 0.1 increment until a full square
-            for (int i = 0; i < 10; i++) {
-                double oldX = robot.getX();
-                double robotX = robot.getX() - 0.1;
-                double newX = Math.round(robotX * 10.0) / 10.0;
-                robot.setX(newX);
-                Platform.runLater(() -> {
-                    arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
-                    arena.requestLayout();
-                    arena.removeKey(oldX, robot.getY());
-                });
-                try {
-                    Thread.sleep(40);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+        if (robot != null) {
+            if (robot.getX() > 0.0 && !arena.containsRobot(robot.getX() - 1.0, robot.getY())) {
+                // Occupy current square and next square
+                arena.occupySquare(robot.getX(), robot.getY());
+                arena.occupySquare(robot.getX() - 1.0, robot.getY());
+                // move each 0.1 increment until a full square
+                for (int i = 0; i < 10; i++) {
+                    double oldX = robot.getX();
+                    double robotX = robot.getX() - 0.1;
+                    double newX = Math.round(robotX * 10.0) / 10.0;
+                    robot.setX(newX);
+                    Platform.runLater(() -> {
+                        arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
+                        arena.requestLayout();
+                        arena.removeKey(oldX, robot.getY());
+                    });
+                    try {
+                        Thread.sleep(40);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
             }
         }
     }
 
     public void moveRight() {
-        if (robot.getX() < arena.getGridWidth() - 1.0 && !arena.containsRobot(robot.getX() + 1.0, robot.getY())) {
-            // Occupy current square and next square
-            arena.occupySquare(robot.getX(), robot.getY());
-            arena.occupySquare(robot.getX() + 1.0, robot.getY());
-            // move each 0.1 increment until a full square
-            for (int i = 0; i < 10; i++) {
-                double oldX = robot.getX();
-                double robotX = robot.getX() + 0.1;
-                double newX = Math.round(robotX * 10.0) / 10.0;
-                robot.setX(newX);
-                Platform.runLater(() -> {
-                    arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
-                    arena.requestLayout();
-                    arena.removeKey(oldX, robot.getY());
-                });
-                try {
-                    Thread.sleep(40);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+        if (robot != null) {
+            if (robot.getX() < arena.getGridWidth() - 1.0 && !arena.containsRobot(robot.getX() + 1.0, robot.getY())) {
+                // Occupy current square and next square
+                arena.occupySquare(robot.getX(), robot.getY());
+                arena.occupySquare(robot.getX() + 1.0, robot.getY());
+                // move each 0.1 increment until a full square
+                for (int i = 0; i < 10; i++) {
+                    double oldX = robot.getX();
+                    double robotX = robot.getX() + 0.1;
+                    double newX = Math.round(robotX * 10.0) / 10.0;
+                    robot.setX(newX);
+                    Platform.runLater(() -> {
+                        arena.addKey(robot.getId(), robot.getX(), robot.getY(), robot.getTypeId());
+                        arena.requestLayout();
+                        arena.removeKey(oldX, robot.getY());
+                    });
+                    try {
+                        Thread.sleep(40);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
             }
         }

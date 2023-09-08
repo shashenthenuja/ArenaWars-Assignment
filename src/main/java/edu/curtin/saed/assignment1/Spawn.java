@@ -37,6 +37,8 @@ public class Spawn {
                             logger.appendText(request.getId() + " Spawned at " + "[" + (int) request.getX() + ","
                                     + (int) request.getY() + "]\n");
                         });
+                        Movement movement = new Movement(request, arena, logger);
+                        movement.move();
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -57,7 +59,7 @@ public class Spawn {
                     if (coordinates != null) {
                         Random random = new Random();
                         int robotType = random.nextInt(3) + 1;
-                        Robot newRobot = new Robot(arena, logger, coordinates[0], coordinates[1], "Robot " + robotCount,
+                        Robot newRobot = new Robot(coordinates[0], coordinates[1], "Robot " + robotCount,
                                 robotType);
                         robotQueue.add(newRobot);
                         robotCount++;
