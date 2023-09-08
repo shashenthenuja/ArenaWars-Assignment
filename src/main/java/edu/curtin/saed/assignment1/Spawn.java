@@ -1,10 +1,12 @@
 package edu.curtin.saed.assignment1;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
@@ -13,6 +15,7 @@ public class Spawn {
     private JFXArena arena;
     private BlockingQueue<Robot> robotQueue = new LinkedBlockingQueue<>();
     private ExecutorService robotExecutor = Executors.newCachedThreadPool();
+    private List<Movement> movementThreads = new ArrayList<Movement>();
     private TextArea logger;
     private int robotCount = 1;
 
@@ -37,8 +40,9 @@ public class Spawn {
                             logger.appendText(request.getId() + " Spawned at " + "[" + (int) request.getX() + ","
                                     + (int) request.getY() + "]\n");
                         });
-                        Movement movement = new Movement(request, arena, logger, score);
-                        movement.move();
+                        // add the movement to a list so the threads can be interrupted later
+                        movementThreads.add(new Movement(request, arena, logger, score));
+                        movementThreads.get(movementThreads.size() - 1).run();
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -57,8 +61,7 @@ public class Spawn {
                 try {
                     double[] coordinates = arena.getSpawnCoordinates();
                     if (coordinates != null) {
-                        Random random = new Random();
-                        int robotType = random.nextInt(3) + 1;
+                        int robotType = ThreadLocalRandom.current().nextInt(3) + 1;
                         Robot newRobot = new Robot(coordinates[0], coordinates[1], "Robot " + robotCount,
                                 robotType);
                         robotQueue.add(newRobot);
@@ -84,6 +87,9 @@ public class Spawn {
 
     // Method to end the spawning thread
     public void endThreads() {
+        for (Movement mt : movementThreads) {
+            mt.endThread();
+        }
         robotExecutor.shutdownNow();
     }
 }

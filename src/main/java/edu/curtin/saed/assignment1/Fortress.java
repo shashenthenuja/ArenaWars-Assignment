@@ -7,7 +7,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-public class Fortress {
+public class Fortress implements Runnable {
     private JFXArena arena;
     private Label label;
     private BlockingQueue<Wall> wallQueue = new ArrayBlockingQueue<>(10);
@@ -22,8 +22,10 @@ public class Fortress {
         this.label = label;
     }
 
-    // Method to process Wall requests from blocking queue and add them
-    public void processWallRequests() {
+    // Override run method to process Wall requests from the blocking queue and add
+    // them
+    @Override
+    public void run() {
         fortThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {

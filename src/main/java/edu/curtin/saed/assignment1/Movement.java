@@ -1,11 +1,11 @@
 package edu.curtin.saed.assignment1;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
-public class Movement {
+public class Movement implements Runnable {
     private Robot robot;
     private JFXArena arena;
     private Score score;
@@ -39,8 +39,7 @@ public class Movement {
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
@@ -67,8 +66,7 @@ public class Movement {
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
@@ -95,8 +93,7 @@ public class Movement {
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
@@ -123,8 +120,7 @@ public class Movement {
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
@@ -134,78 +130,85 @@ public class Movement {
     public void movementLogic() {
         // move the robots in random ways and wall destruction
         if (robot != null) {
-            Random random = new Random();
-            int mov = random.nextInt(4) + 1;
+            int mov = ThreadLocalRandom.current().nextInt(4) + 1;
             switch (mov) {
                 case 1:
-                // check if the next path contains wall and destroy them
+                    // check if the next path contains wall and destroy them
                     if (arena.containsWall(robot.getX(), robot.getY() + 1.0)) {
                         moveDown();
                         arena.destroyWall(robot.getX(), robot.getY());
-                        logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
+                        logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY()
+                                + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
-                    }else if (arena.containsDestroWall(robot.getX(), robot.getY() + 1.0)) {
+                    } else if (arena.containsDestroWall(robot.getX(), robot.getY() + 1.0)) {
                         moveDown();
                         arena.removeKey(robot.getX(), robot.getY());
-                        logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
+                        logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + ","
+                                + (int) robot.getY() + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
-                    }else {
+                    } else {
                         moveDown();
                     }
                     break;
                 case 2:
-                // check if the next path contains wall and destroy them
+                    // check if the next path contains wall and destroy them
                     if (arena.containsWall(robot.getX(), robot.getY() - 1.0)) {
                         moveUp();
                         arena.destroyWall(robot.getX(), robot.getY());
-                        logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
+                        logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY()
+                                + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
-                    }else if (arena.containsDestroWall(robot.getX(), robot.getY() - 1.0)) {
+                    } else if (arena.containsDestroWall(robot.getX(), robot.getY() - 1.0)) {
                         moveUp();
                         arena.removeKey(robot.getX(), robot.getY());
-                        logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
+                        logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + ","
+                                + (int) robot.getY() + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
-                    }else {
+                    } else {
                         moveUp();
                     }
                     break;
                 case 3:
-                // check if the next path contains wall and destroy them
+                    // check if the next path contains wall and destroy them
                     if (arena.containsWall(robot.getX() - 1.0, robot.getY())) {
                         moveLeft();
                         arena.destroyWall(robot.getX(), robot.getY());
-                        logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
+                        logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY()
+                                + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
-                    }else if (arena.containsDestroWall(robot.getX() - 1.0, robot.getY())) {
+                    } else if (arena.containsDestroWall(robot.getX() - 1.0, robot.getY())) {
                         moveLeft();
                         arena.removeKey(robot.getX(), robot.getY());
-                        logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
+                        logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + ","
+                                + (int) robot.getY() + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
-                    }else {
+                    } else {
                         moveLeft();
                     }
                     break;
                 case 4:
-                // check if the next path contains wall and destroy them
+                    // check if the next path contains wall and destroy them
                     if (arena.containsWall(robot.getX() + 1.0, robot.getY())) {
                         moveRight();
                         arena.destroyWall(robot.getX(), robot.getY());
-                        logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
+                        logMessage(robot.getId() + " Impacted Wall at [" + (int) robot.getX() + "," + (int) robot.getY()
+                                + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
-                    }else if (arena.containsDestroWall(robot.getX() + 1.0, robot.getY())) {
+                    } else if (arena.containsDestroWall(robot.getX() + 1.0, robot.getY())) {
                         moveRight();
                         arena.removeKey(robot.getX(), robot.getY());
-                        logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + "," + (int) robot.getY() + "]\n");
+                        logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + ","
+                                + (int) robot.getY() + "]\n");
                         destroyRobot();
                         score.addDestroyBonus();
-                    }else {
+                    } else {
                         moveRight();
                     }
                     break;
@@ -220,13 +223,20 @@ public class Movement {
         robot = null;
     }
 
+    // Log messages to the GUI
     public void logMessage(String message) {
         Platform.runLater(() -> {
             logger.appendText(message);
         });
     }
 
-    public void move() {
+    // Method to end the wall thread
+    public void endThread() {
+        moveThread.interrupt();
+    }
+
+    @Override
+    public void run() {
         // movement thread with robot delay
         moveThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
@@ -237,6 +247,7 @@ public class Movement {
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    break;
                 }
             }
         });

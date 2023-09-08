@@ -423,17 +423,14 @@ public class JFXArena extends Pane
                     case 1:
                         drawImage(gfx, robot1, x, y);
                         drawLabel(gfx, robot_id, x, y);
-                        //requestLayout();
                         break;
                     case 2:
                         drawImage(gfx, robot2, x, y);
                         drawLabel(gfx, robot_id, x, y);
-                        //requestLayout();
                         break;
                     case 3:
                         drawImage(gfx, robot3, x, y);
                         drawLabel(gfx, robot_id, x, y);
-                        //requestLayout();
                         break;
                     default:
                         break;
