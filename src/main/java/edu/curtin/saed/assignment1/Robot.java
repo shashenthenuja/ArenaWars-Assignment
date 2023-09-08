@@ -10,13 +10,18 @@ public class Robot {
     private int typeId;
     private String id;
     private Random random = new Random();
+    private JFXArena arena;
+    private Movement movement;
 
-    public Robot(double x, double y, String id, int typeId) {
+    public Robot(JFXArena arena, double x, double y, String id, int typeId) {
+        this.arena = arena;
         this.x = x;
         this.y = y;
         this.id = id;
         this.typeId = typeId;
         this.delay = random.nextInt(2000 - 500 + 1) + 500;
+        movement = new Movement(this, arena);
+        movement.move();
     }
 
     // override hashcode to check if robot object is same
@@ -62,5 +67,11 @@ public class Robot {
         return typeId;
     }
 
-    
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
 }

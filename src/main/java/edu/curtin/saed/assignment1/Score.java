@@ -11,4 +11,8 @@ public class Score {
         score += 10;
     }
 
+    public void addDestroyBonus() {
+        score += 100;
+    }
+
 }

@@ -2,10 +2,12 @@ package edu.curtin.saed.assignment1;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class App extends Application {
     public static void main(String[] args) {
@@ -18,12 +20,14 @@ public class App extends Application {
         TextArea logger = new TextArea();
         JFXArena arena = new JFXArena();
         arena.setCitadelLocation();
+        Score score = new Score();
         Fortress fort = new Fortress(arena);
         Spawn spawn = new Spawn(arena);
         fort.processWallRequests();
         arena.addListener((x, y) -> {
-            //System.out.println("Arena click at (" + x + "," + y + ")");
+            // System.out.println("Arena click at (" + x + "," + y + ")");
             fort.requestWall(x, y, logger);
+            // score.addDestroyBonus();
         });
 
         ToolBar toolbar = new ToolBar();
@@ -53,14 +57,21 @@ public class App extends Application {
         spawn.requestRobot();
         spawn.processRobotRequests(logger);
 
-        updateScore(label);
+        updateScore(score, stage, label);
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                fort.endThread();
+                spawn.endThreads();
+            }
+        });
     }
 
     // Method to update scores in a new thread
-    public void updateScore(Label label) {
-        Score score = new Score();
+    public void updateScore(Score score, Stage stage, Label label) {
         Thread scoreThread = new Thread(() -> {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Thread.sleep(1000);
                     score.addScore();
@@ -69,11 +80,20 @@ public class App extends Application {
                     });
 
                 } catch (InterruptedException e) {
-                    break;
+                    Thread.currentThread().interrupt();
                 }
             }
         });
 
         scoreThread.start();
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                if (scoreThread != null && scoreThread.isAlive()) {
+                    scoreThread.interrupt();
+                }
+            }
+        });
     }
 }

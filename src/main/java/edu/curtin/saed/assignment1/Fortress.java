@@ -10,6 +10,7 @@ public class Fortress {
     private JFXArena arena;
     private BlockingQueue<Wall> wallQueue = new ArrayBlockingQueue<>(10);
     private static final int MAX_WALLS = 10;
+    private Thread fortThread;
 
     private int remWalls = MAX_WALLS;
 
@@ -19,12 +20,14 @@ public class Fortress {
 
     // Method to process Wall requests from blocking queue and add them
     public void processWallRequests() {
-        Thread fortThread = new Thread(() -> {
-            while (true) {
+        fortThread = new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    Wall request = wallQueue.take();
-                    addNewWall(request.getX(), request.getY());
-                    Thread.sleep(2000);
+                    if (!wallQueue.isEmpty()) {
+                        Wall request = wallQueue.poll();
+                        addNewWall(request.getX(), request.getY());
+                        Thread.sleep(2000);
+                    }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -41,7 +44,8 @@ public class Fortress {
             if (!wallQueue.contains(newWall) && !arena.containsImage(x, y)) {
                 wallQueue.add(newWall);
                 remWalls--;
-                logger.appendText("Wall Queued at " + "[" + (int) x + "," + (int) y + "] - " + "(" + remWalls + ")"+" walls remaining\n");
+                logger.appendText("Wall Queued at " + "[" + (int) x + "," + (int) y + "] - " + "(" + remWalls + ")"
+                        + " walls remaining\n");
             }
         }
     }
@@ -50,7 +54,6 @@ public class Fortress {
     public void addNewWall(double x, double y) {
         if (arena != null) {
             Platform.runLater(() -> {
-                arena.setNewWall();
                 arena.addNewWall(x, y);
             });
         }
@@ -59,6 +62,13 @@ public class Fortress {
     // Method to increase wall count
     public void increaseWallCount() {
         remWalls++;
+    }
+
+    // Method to end the wall thread
+    public void endThread() {
+        if (fortThread != null && fortThread.isAlive()) {
+            fortThread.interrupt();
+        }
     }
 
 }
