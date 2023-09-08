@@ -23,10 +23,6 @@ public class JFXArena extends Pane
     // Represents an image to draw, retrieved as a project resource.
     private static final String IMAGE_FILE = "1554047213.png";
     private Image robot1;
-    private Image robot;
-    private String robotId = "";
-    private int delay;
-    private int robotType;
 
     private static final String ROBOT_2_RES = "droid2.png";
     private Image robot2;
@@ -47,14 +43,9 @@ public class JFXArena extends Pane
     // requirements of your application.
     private int gridWidth = 9;
     private int gridHeight = 9;
-    private double robotX = 0.0;
-    private double robotY = 0.0;
 
     private double citadelx = 0.0;
     private double citadely = 0.0;
-
-    private double wallx = 0.0;
-    private double wally = 0.0;
 
     private double gridSquareSize; // Auto-calculated
     private Canvas canvas; // Used to provide a 'drawing surface'.
@@ -179,26 +170,6 @@ public class JFXArena extends Pane
         citadely = gridHeight / 2;
         images.put(getKey(citadelx, citadely), "citadel");
     }
-    
-    /**
-     * Moves a robot image to a new grid position. This is highly rudimentary, as you will need
-     * many different robots in practice. This method currently just serves as a demonstration.
-     */
-    public void setRobotPosition(double x, double y)
-    {
-        //if (robotX > 0.0 || robotX < (double)gridWidth - 1.0 && robotY < (double)gridHeight - 1.0 || robotY > 0.0 ) {
-            
-            double oldX = robotX;
-            double oldY = robotY;
-            robotX = x;
-            robotY = y;
-            String key = getKey(x, y);
-            images.put(key, robotId);
-            requestLayout();
-            String oldKey = getKey(oldX, oldY);
-            images.remove(oldKey);
-        //}
-    }
 
     public void addKey(String robotId, double x, double y, int type) {
         String key = getKey(x, y);
@@ -215,11 +186,6 @@ public class JFXArena extends Pane
         images.put(key, "null");
     }
 
-    public void removeSquare(double x, double y) {
-        String oldKey = getKey(x, y);
-        images.remove(oldKey);
-    }
-
     public double getGridHeight() {
         return (double) gridHeight;
     }
@@ -228,35 +194,10 @@ public class JFXArena extends Pane
         return (double) gridWidth;
     }
 
-    public Map<String, String> getMap() {
-        return images;
-    }
-
-    public double getCitadelX() {
-        return citadelx;
-    }
-
-    public double getCitadelY() {
-        return citadely;
-    }
-
-    public void setRobotX(double robotX) {
-        this.robotX = robotX;
-    }
-
-    public void setRobotY(double robotY) {
-        this.robotY = robotY;
-    }
-
     public void addNewRobot(double x, double y, String id, int delayTime, int typeId)
     {
-        robotX = x;
-        robotY = y;
-        robotId = id;
-        robotType = typeId;
-        delay = delayTime;
         String key = getKey(x, y);
-        images.put(key, robotType + "," + robotId);
+        images.put(key, typeId + "," + id);
         requestLayout();
     }
 
@@ -267,30 +208,23 @@ public class JFXArena extends Pane
         double[] bottomRight = {(double) gridWidth - 1.0, (double) gridHeight - 1.0};
     
         if (!containsRobot(topLeft[0], topLeft[1])) {
-            //System.out.println("Spawning " + topLeft[0] + ", " + topLeft[1]);
             return topLeft;
         }
         if (!containsRobot(bottomLeft[0], bottomLeft[1])) {
-            //System.out.println(bottomLeft[0] + ", " + bottomLeft[1]);
             return bottomLeft;
         }
         if (!containsRobot(topRight[0], topRight[1])) {
-            //System.out.println(topRight[0] + ", " + topRight[1]);
             return topRight;
         }
         if (!containsRobot(bottomRight[0], bottomRight[1])) {
-            //System.out.println(bottomRight[0] + ", " + bottomRight[1]);
             return bottomRight;
         }
         
         return null;
     }
-    
 
     public void addNewWall(double x, double y)
     {
-        wallx = x;
-        wally = y;
         String key = getKey(x, y);
         images.put(key, "wall");
         requestLayout();
@@ -437,21 +371,21 @@ public class JFXArena extends Pane
             if (value.contains("Robot")) {
                 String[] parts = value.split(",");
                 int type = Integer.parseInt(parts[0]);
-                String robot_id = parts[1];
+                String robotId = parts[1];
 
-                // Draw the robot image and label
+                // Draw the robot image and label according to type
                 switch (type) {
                     case 1:
                         drawImage(gfx, robot1, x, y);
-                        drawLabel(gfx, robot_id, x, y);
+                        drawLabel(gfx, robotId, x, y);
                         break;
                     case 2:
                         drawImage(gfx, robot2, x, y);
-                        drawLabel(gfx, robot_id, x, y);
+                        drawLabel(gfx, robotId, x, y);
                         break;
                     case 3:
                         drawImage(gfx, robot3, x, y);
-                        drawLabel(gfx, robot_id, x, y);
+                        drawLabel(gfx, robotId, x, y);
                         break;
                     default:
                         break;
@@ -540,7 +474,7 @@ public class JFXArena extends Pane
      *     
      * You shouldn't need to modify this method.
      */
-    private void drawLine(GraphicsContext gfx, double gridX1, double gridY1, 
+    /* private void drawLine(GraphicsContext gfx, double gridX1, double gridY1, 
                                                double gridX2, double gridY2)
     {
         gfx.setStroke(Color.RED);
@@ -556,5 +490,5 @@ public class JFXArena extends Pane
                        (clippedGridY1 + 0.5) * gridSquareSize, 
                        (gridX2 + 0.5) * gridSquareSize, 
                        (gridY2 + 0.5) * gridSquareSize);
-    }
+    } */
 }

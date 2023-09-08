@@ -15,7 +15,7 @@ public class Spawn {
     private JFXArena arena;
     private BlockingQueue<Robot> robotQueue = new LinkedBlockingQueue<>();
     private ExecutorService robotExecutor = Executors.newCachedThreadPool();
-    private List<Movement> movementThreads = new ArrayList<Movement>();
+    private List<Movement> movementThreads = new ArrayList<>();
     private TextArea logger;
     private int robotCount = 1;
 

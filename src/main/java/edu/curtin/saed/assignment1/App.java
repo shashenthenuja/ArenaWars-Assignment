@@ -11,7 +11,6 @@ import javafx.stage.WindowEvent;
 
 public class App extends Application {
     private Thread scoreThread;
-    private Score score;
     private Fortress fort;
     private Spawn spawn;
 
@@ -31,7 +30,7 @@ public class App extends Application {
         ToolBar toolbar = new ToolBar(label, space, label2);
         arena.setCitadelLocation();
 
-        score = new Score();
+        Score score = new Score();
         fort = new Fortress(arena, label2);
         spawn = new Spawn(arena, logger);
         fort.run();
