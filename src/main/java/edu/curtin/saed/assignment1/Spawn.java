@@ -1,7 +1,5 @@
 package edu.curtin.saed.assignment1;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,7 +20,6 @@ public class Spawn {
     private JFXArena arena;
     private BlockingQueue<Robot> robotQueue = new LinkedBlockingQueue<>();
     private ExecutorService robotExecutor = Executors.newCachedThreadPool();
-    private List<Movement> movementThreads = new ArrayList<>();
     private TextArea logger;
     private int robotCount = 1;
 
@@ -47,9 +44,8 @@ public class Spawn {
                             logger.appendText(request.getId() + " Spawned at " + "[" + (int) request.getX() + ","
                                     + (int) request.getY() + "]\n");
                         });
-                        // add the movement to a list so the threads can be interrupted later
-                        movementThreads.add(new Movement(request, arena, logger, score, app, fort));
-                        movementThreads.get(movementThreads.size() - 1).run();
+                        // create new movement thread for the robot from the threadpool
+                        new Movement(request, arena, logger, score, app, fort, robotExecutor).run();
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -93,12 +89,8 @@ public class Spawn {
         }
     }
 
-    // Method to end the spawning thread
+    // Method to end the spawning and movement threadpool
     public void endThreads() {
-        // end all the movement threads
-        for (Movement mt : movementThreads) {
-            mt.endThread();
-        }
         robotExecutor.shutdownNow();
     }
 }

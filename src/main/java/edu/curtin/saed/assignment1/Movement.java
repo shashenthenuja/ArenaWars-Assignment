@@ -1,5 +1,6 @@
 package edu.curtin.saed.assignment1;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.application.Platform;
@@ -18,16 +19,17 @@ public class Movement implements Runnable {
     private App app;
     private Score score;
     private Fortress fort;
-    private Thread moveThread;
     private TextArea logger;
+    private ExecutorService robotExecutor;
 
-    public Movement(Robot robot, JFXArena arena, TextArea logger, Score score, App app, Fortress fort) {
+    public Movement(Robot robot, JFXArena arena, TextArea logger, Score score, App app, Fortress fort, ExecutorService robotExecutor) {
         this.robot = robot;
         this.arena = arena;
         this.logger = logger;
         this.score = score;
         this.app = app;
         this.fort = fort;
+        this.robotExecutor = robotExecutor;
     }
 
     // Move the robot down a grid square
@@ -269,15 +271,10 @@ public class Movement implements Runnable {
         });
     }
 
-    // Method to end the wall thread
-    public void endThread() {
-        moveThread.interrupt();
-    }
-
     @Override
     public void run() {
         // movement thread with robot delay
-        moveThread = new Thread(() -> {
+        robotExecutor.submit(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     if (robot != null) {
@@ -290,7 +287,6 @@ public class Movement implements Runnable {
                 }
             }
         });
-        moveThread.start();
     }
 
 }
