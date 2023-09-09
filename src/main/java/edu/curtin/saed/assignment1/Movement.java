@@ -262,6 +262,7 @@ public class Movement implements Runnable {
     // Method to destroy the robot
     public void destroyRobot() {
         robot = null;
+        Thread.currentThread().interrupt();
     }
 
     // Log messages to the GUI
