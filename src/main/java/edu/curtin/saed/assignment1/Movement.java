@@ -158,6 +158,7 @@ public class Movement implements Runnable {
                         logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + ","
                                 + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        fort.increaseWallCount();
                         score.addDestroyBonus();
                     } else if (arena.containsCitadel(robot.getX(), robot.getY() + 1.0)) {
                         moveDown();
