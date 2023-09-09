@@ -9,6 +9,13 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+/* *******************************************************************
+* File:       App.java
+* Author:     G.G.T.Shashen
+* Created:    23/08/2023
+* Modified:   09/09/2022
+* Desc:       JavaFX Grid Game - Arena Wars
+***********************************************************************/
 public class App extends Application {
     private Thread scoreThread;
     private Fortress fort;
@@ -25,29 +32,24 @@ public class App extends Application {
         JFXArena arena = new JFXArena();
         Label label = new Label("Score : 0");
         Label label2 = new Label("Walls Queued : 0");
+
+        // create a space element between the labels
         Pane space = new Pane();
         HBox.setHgrow(space, javafx.scene.layout.Priority.ALWAYS);
         ToolBar toolbar = new ToolBar(label, space, label2);
+        // set the citadel location according to the grid size
         arena.setCitadelLocation();
 
         Score score = new Score();
         fort = new Fortress(arena, label2);
         spawn = new Spawn(arena, logger);
+        // run wall thread
         fort.run();
 
         arena.addListener((x, y) -> {
+            // request walls on mouse click events
             fort.requestWall(x, y, logger);
         });
-
-        // Button btn1 = new Button("My Button 1");
-        // Button btn2 = new Button("My Button 2");
-
-        // toolbar.getItems().addAll(btn1, btn2, label);
-
-        // btn1.setOnAction((event) ->
-        // {
-        // System.out.println("Button 1 pressed");
-        // });
 
         SplitPane splitPane = new SplitPane();
         splitPane.getItems().addAll(arena, logger);
@@ -61,11 +63,14 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
 
+        // run request and process robot threads
         spawn.requestRobot();
         spawn.processRobotRequests(score, this);
 
+        // update the score in a thread
         updateScore(score, stage, label);
 
+        // end the game on gui close button event
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {

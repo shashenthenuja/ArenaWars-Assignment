@@ -2,6 +2,13 @@ package edu.curtin.saed.assignment1;
 
 import java.util.Objects;
 
+/* *******************************************************************
+* File:       Wall.java
+* Author:     G.G.T.Shashen
+* Created:    24/08/2023
+* Modified:   09/09/2022
+* Desc:       Wall class which contains info about each wall
+***********************************************************************/
 public class Wall {
     private final double x;
     private final double y;

@@ -5,6 +5,13 @@ import java.util.concurrent.ThreadLocalRandom;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
+/* *******************************************************************
+* File:       Movement.java
+* Author:     G.G.T.Shashen
+* Created:    06/09/2023
+* Modified:   09/09/2022
+* Desc:       Robot movement logic implementation
+***********************************************************************/
 public class Movement implements Runnable {
     private Robot robot;
     private JFXArena arena;
@@ -21,8 +28,10 @@ public class Movement implements Runnable {
         this.app = app;
     }
 
+    // Move the robot down a grid square
     public void moveDown() {
         if (robot != null) {
+            // check if the boundaries and the next grid square is valid
             if (robot.getY() < arena.getGridHeight() - 1.0 && !arena.containsRobot(robot.getX(), robot.getY() + 1.0)) {
                 // Occupy current square and next square
                 arena.occupySquare(robot.getX(), robot.getY());
@@ -46,8 +55,10 @@ public class Movement implements Runnable {
         }
     }
 
+    // Move the robot up a grid square
     public void moveUp() {
         if (robot != null) {
+            // check if the boundaries and the next grid square is valid
             if (robot.getY() > 0.0 && !arena.containsRobot(robot.getX(), robot.getY() - 1.0)) {
                 // Occupy current square and next square
                 arena.occupySquare(robot.getX(), robot.getY());
@@ -71,8 +82,10 @@ public class Movement implements Runnable {
         }
     }
 
+    // Move the robot left a grid square
     public void moveLeft() {
         if (robot != null) {
+            // check if the boundaries and the next grid square is valid
             if (robot.getX() > 0.0 && !arena.containsRobot(robot.getX() - 1.0, robot.getY())) {
                 // Occupy current square and next square
                 arena.occupySquare(robot.getX(), robot.getY());
@@ -96,8 +109,10 @@ public class Movement implements Runnable {
         }
     }
 
+    // Move the robot right a grid square
     public void moveRight() {
         if (robot != null) {
+            // check if the boundaries and the next grid square is valid
             if (robot.getX() < arena.getGridWidth() - 1.0 && !arena.containsRobot(robot.getX() + 1.0, robot.getY())) {
                 // Occupy current square and next square
                 arena.occupySquare(robot.getX(), robot.getY());

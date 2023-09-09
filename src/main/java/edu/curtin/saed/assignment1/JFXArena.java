@@ -171,16 +171,19 @@ public class JFXArena extends Pane
         images.put(getKey(citadelx, citadely), "citadel");
     }
 
+    // Add robot movement to the map
     public void addKey(String robotId, double x, double y, int type) {
         String key = getKey(x, y);
         images.put(key, type + "," + robotId);
     }
 
+    // Remove robot movement from the map
     public void removeKey(double x, double y) {
         String oldKey = getKey(x, y);
         images.remove(oldKey);
     }
 
+    // occupy the grid square for a robot
     public void occupySquare(double x, double y) {
         String key = getKey(x, y);
         images.put(key, "null");
@@ -194,6 +197,7 @@ public class JFXArena extends Pane
         return (double) gridWidth;
     }
 
+    // add a new robot to the map
     public void addNewRobot(double x, double y, String id, int delayTime, int typeId)
     {
         String key = getKey(x, y);
@@ -201,6 +205,7 @@ public class JFXArena extends Pane
         requestLayout();
     }
 
+    // get the next available robot spawn coordinates
     public double[] getSpawnCoordinates() {
         double[] topLeft = {0.0, 0.0};
         double[] bottomLeft = {0.0, (double) gridHeight - 1.0};
@@ -223,6 +228,7 @@ public class JFXArena extends Pane
         return null;
     }
 
+    // add a new wall to the map
     public void addNewWall(double x, double y)
     {
         String key = getKey(x, y);
@@ -230,6 +236,7 @@ public class JFXArena extends Pane
         requestLayout();
     }
 
+    // add a destroyed wall to the map
     public void destroyWall(double x, double y) {
         String key = getKey(x, y);
         images.remove(key);
@@ -237,6 +244,7 @@ public class JFXArena extends Pane
         requestLayout();
     }
 
+    // add game end cross to the map
     public void gameEnd(double x, double y) {
         String key = getKey(x, y);
         images.remove(key);
@@ -244,11 +252,13 @@ public class JFXArena extends Pane
         requestLayout();
     }
 
+    // check if the current coordinates contains any sprite
     public boolean containsImage(double x, double y) {
         String key = getKey(x, y);
         return images.containsKey(key);
     }
 
+    // check if the current coordinates contains a robot
     public boolean containsRobot(double x, double y) {
         String key = getKey(x, y);
         String value = images.get(key);
@@ -261,6 +271,7 @@ public class JFXArena extends Pane
         return false;
     }
 
+    // check if the current coordinates contains a wall
     public boolean containsWall(double x, double y) {
         String key = getKey(x, y);
         String value = images.get(key);
@@ -268,6 +279,7 @@ public class JFXArena extends Pane
         return value != null && value.equals("wall");
     }
 
+    // check if the current coordinates contains a destroyed wall
     public boolean containsDestroWall(double x, double y) {
         String key = getKey(x, y);
         String value = images.get(key);
@@ -275,6 +287,7 @@ public class JFXArena extends Pane
         return value != null && value.equals("destrowall");
     }
 
+    // check if the currrent coordinates contains the citadel
     public boolean containsCitadel(double x, double y) {
         String key = getKey(x, y);
         String value = images.get(key);
@@ -282,6 +295,7 @@ public class JFXArena extends Pane
         return value != null && value.equals("citadel");
     }
 
+    // get the map key for the current coordinates
     public String getKey(double x, double y) {
         return String.valueOf(x) + "," + String.valueOf(y);
     }
@@ -358,22 +372,23 @@ public class JFXArena extends Pane
         // Invoke helper methods to draw things at the current location.
         // ** You will need to adapt this to the requirements of your application. **
 
+        // iterate the map and draw the current sprites in the map
         for (Map.Entry<String, String> sprite : images.entrySet()) {
             String coordinates = sprite.getKey();
             String value = sprite.getValue();
             
-            // Split the coordinates into x and y
+            // Split the coordinates into x and y coordinates
             String[] coordinatesArray = coordinates.split(",");
             double x = Double.parseDouble(coordinatesArray[0]);
             double y = Double.parseDouble(coordinatesArray[1]);
             
-            // Check the value to determine what to draw
+            // Check the map value to determine what to draw
             if (value.contains("Robot")) {
                 String[] parts = value.split(",");
                 int type = Integer.parseInt(parts[0]);
                 String robotId = parts[1];
 
-                // Draw the robot image and label according to type
+                // Draw the robot image and label according to robot type
                 switch (type) {
                     case 1:
                         drawImage(gfx, robot1, x, y);

@@ -11,6 +11,13 @@ import java.util.concurrent.ThreadLocalRandom;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
+/* *******************************************************************
+* File:       Spawn.java
+* Author:     G.G.T.Shashen
+* Created:    26/08/2023
+* Modified:   09/09/2022
+* Desc:       Robot spawn logic implementation
+***********************************************************************/
 public class Spawn {
     private JFXArena arena;
     private BlockingQueue<Robot> robotQueue = new LinkedBlockingQueue<>();
@@ -59,6 +66,7 @@ public class Spawn {
         robotExecutor.submit(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
+                    // get the available spawn coordinates and spawn a random robot
                     double[] coordinates = arena.getSpawnCoordinates();
                     if (coordinates != null) {
                         int robotType = ThreadLocalRandom.current().nextInt(3) + 1;
@@ -87,6 +95,7 @@ public class Spawn {
 
     // Method to end the spawning thread
     public void endThreads() {
+        // end all the movement threads
         for (Movement mt : movementThreads) {
             mt.endThread();
         }

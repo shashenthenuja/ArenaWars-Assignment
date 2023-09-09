@@ -2,6 +2,13 @@ package edu.curtin.saed.assignment1;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/* *******************************************************************
+* File:       Robot.java
+* Author:     G.G.T.Shashen
+* Created:    26/08/2023
+* Modified:   09/09/2022
+* Desc:       Robot class implementation
+***********************************************************************/
 public class Robot {
     private double x;
     private double y;

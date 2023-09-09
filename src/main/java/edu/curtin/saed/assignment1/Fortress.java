@@ -7,6 +7,13 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
+/* *******************************************************************
+* File:       Fortress.java
+* Author:     G.G.T.Shashen
+* Created:    24/08/2023
+* Modified:   09/09/2022
+* Desc:       Wall building implementation
+***********************************************************************/
 public class Fortress implements Runnable {
     private JFXArena arena;
     private Label label;
@@ -22,8 +29,8 @@ public class Fortress implements Runnable {
         this.label = label;
     }
 
-    // Override run method to process Wall requests from the blocking queue and add
-    // them
+    /* Override run method to process Wall requests from the blocking queue and add
+    them */
     @Override
     public void run() {
         fortThread = new Thread(() -> {
