@@ -44,9 +44,6 @@ public class JFXArena extends Pane
     private int gridWidth = 9;
     private int gridHeight = 9;
 
-    private double citadelx = 0.0;
-    private double citadely = 0.0;
-
     private double gridSquareSize; // Auto-calculated
     private Canvas canvas; // Used to provide a 'drawing surface'.
 
@@ -166,8 +163,8 @@ public class JFXArena extends Pane
     }
 
     public void setCitadelLocation() {
-        citadelx = gridWidth / 2;
-        citadely = gridHeight / 2;
+        double citadelx = gridWidth / 2;
+        double citadely = gridHeight / 2;
         images.put(getKey(citadelx, citadely), "citadel");
     }
 
