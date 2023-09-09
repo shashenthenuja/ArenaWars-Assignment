@@ -17,15 +17,17 @@ public class Movement implements Runnable {
     private JFXArena arena;
     private App app;
     private Score score;
+    private Fortress fort;
     private Thread moveThread;
     private TextArea logger;
 
-    public Movement(Robot robot, JFXArena arena, TextArea logger, Score score, App app) {
+    public Movement(Robot robot, JFXArena arena, TextArea logger, Score score, App app, Fortress fort) {
         this.robot = robot;
         this.arena = arena;
         this.logger = logger;
         this.score = score;
         this.app = app;
+        this.fort = fort;
     }
 
     // Move the robot down a grid square
@@ -182,6 +184,7 @@ public class Movement implements Runnable {
                         logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + ","
                                 + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        fort.increaseWallCount();
                         score.addDestroyBonus();
                     } else if (arena.containsCitadel(robot.getX(), robot.getY() - 1.0)) {
                         moveUp();
@@ -208,6 +211,7 @@ public class Movement implements Runnable {
                         logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + ","
                                 + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        fort.increaseWallCount();
                         score.addDestroyBonus();
                     } else if (arena.containsCitadel(robot.getX() - 1.0, robot.getY())) {
                         moveLeft();
@@ -234,6 +238,7 @@ public class Movement implements Runnable {
                         logMessage(robot.getId() + " Destroyed Wall at [" + (int) robot.getX() + ","
                                 + (int) robot.getY() + "]\n");
                         destroyRobot();
+                        fort.increaseWallCount();
                         score.addDestroyBonus();
                     } else if (arena.containsCitadel(robot.getX() + 1.0, robot.getY())) {
                         moveRight();

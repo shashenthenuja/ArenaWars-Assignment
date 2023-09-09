@@ -65,7 +65,7 @@ public class App extends Application {
 
         // run request and process robot threads
         spawn.requestRobot();
-        spawn.processRobotRequests(score, this);
+        spawn.processRobotRequests(score, this, fort);
 
         // update the score in a thread
         updateScore(score, stage, label);
